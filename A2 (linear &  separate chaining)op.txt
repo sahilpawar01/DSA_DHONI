@@ -1,0 +1,186 @@
+'''Assignment 2 
+Consider telephone book database of a n clients. make use of hashtable implementation 
+quickly look up clients telephone number make a use of two collision handling techniques 
+and compare them using number of comparisons required to find a set of telephone 
+numbers.''' 
+
+
+1) Program Using Linear Probing:-
+   
+class telephonedirectory: 
+    def __init__(self): 
+        self.size=int(input("Enter size for Hash Table= ")) 
+        self.hash_table=list(0 for i in range(self.size)) 
+        print(self.hash_table) 
+        self.count=0 
+    def hashFunction(self,key): 
+        return key%self.size 
+    def insertRecord(self,key): 
+        if(self.count!=self.size): 
+            index=self.hashFunction(key) 
+            if(self.hash_table[index]==0): 
+                self.hash_table[index]=key 
+                self.count+=1 
+                print(self.hash_table) 
+            else: 
+                print("ohh..!! collision occured..!!") 
+                hx=index 
+                i-=1 
+                while(self.hash_table[index]!=0): 
+                    index=(hx+i)%self.size 
+                    i=i+1 
+                self.hash_table[index]=key 
+                self.count+=1 
+                print(self.hash_table) 
+        else: 
+            print("Hash Table is Full..!!") 
+            return 
+ 
+def main(): 
+    t1=telephonedirectory() 
+    t1.insertRecord(56) 
+    m=int(input("enter total no of records to the insert= ")) 
+    for i in range(m): 
+        t1.insertRecord(int(input("Enter Value= "))) 
+ 
+main() 
+Output: 
+Enter size for Hash Table= 4 
+[0, 0, 0, 0] 
+[56, 0, 0, 0] 
+enter total no of records to the insert= 5 
+Enter Value= 1 
+[56, 1, 0, 0] 
+Enter Value= 2 
+[56, 1, 2, 0] 
+Enter Value= 3 
+[56, 1, 2, 3] 
+Enter Value= 4 
+Hash Table is Full..!! 
+Enter Value= 4 
+Hash Table is Full..!! 
+ 
+ 
+ 
+ Program Usinng separate_chaining_linked_list :-  
+class Node: 
+  def __init__(self, data): 
+    self.data = data 
+    self.next = None 
+ 
+class LinkedList: 
+    def __init__(self): 
+        self.head = list(None for i in range(10)) 
+        print(self.head) 
+ 
+    def printLL(self): 
+      for i in range(10): 
+        current_node = self.head[i] 
+        if(self.head[i] == None): 
+          print('\n',i, ' index list is empty=') 
+        else: 
+          print ('\n',i, 'index list is ',end=' ') 
+          while(current_node): 
+            print(current_node.data, end=' ') 
+            current_node = current_node.next 
+       
+    def insertAtBegin(self, data): 
+      new_node = Node(data) 
+      index = data % 10 
+      if self.head[index] is None: 
+        self.head[index] = new_node 
+        return 
+      else: 
+        new_node.next = self.head[index] 
+        self.head[index] = new_node 
+    def search(self): 
+      teleph_no = int(input('enter telephone no to be search= ')) 
+      index = teleph_no % 10 
+      temp = self.head[index] 
+       
+      while(temp): 
+        if (temp.data == teleph_no): 
+          print ('telephone no found at index ', index) 
+          return 
+        else : 
+          temp = temp.next    
+      print ('telephone not found')      
+def main(): 
+    print('Hello..!! Welcome in DSA program--!!') 
+    L1 = LinkedList() 
+    for i in range(5): 
+      L1.insertAtBegin(int(input('enter telephone number= '))) 
+      L1.printLL() 
+      L1.search() 
+main() 
+
+Output: 
+
+Hello..!! Welcome in DSA program--!! 
+[None, None, None, None, None, None, None, None, None, None] 
+enter telephone number= 12345 
+ 
+ 0  index list is empty= 
+ 
+ 1  index list is empty= 
+ 
+ 2  index list is empty= 
+ 
+ 3  index list is empty= 
+ 
+ 4  index list is empty= 
+ 
+ 5 index list is  12345  
+ 6  index list is empty= 
+ 
+ 7  index list is empty= 
+ 
+ 8  index list is empty= 
+ 
+ 9  index list is empty= 
+enter telephone no to be search= 12345 
+telephone no found at index  5 
+enter telephone number= 123 
+ 
+ 0  index list is empty= 
+ 
+ 1  index list is empty= 
+ 
+ 2  index list is empty= 
+ 
+ 3 index list is  123  
+ 4  index list is empty= 
+ 
+ 5 index list is  12345  
+ 6  index list is empty= 
+ 
+ 7  index list is empty= 
+ 
+ 8  index list is empty= 
+ 
+ 9  index list is empty= 
+enter telephone no to be search= 1 
+telephone not found 
+enter telephone number= 1236 
+ 
+ 0  index list is empty= 
+ 
+ 1  index list is empty= 
+ 
+ 2  index list is empty= 
+ 
+ 3 index list is  123  
+ 4  index list is empty= 
+ 
+ 5 index list is  12345  
+ 6 index list is  1236  
+ 7  index list is empty= 
+ 
+ 8  index list is empty= 
+ 
+ 9  index list is empty= 
+enter telephone no to be search= 123 
+telephone no found at index  3 
+ 
+ 
+ 

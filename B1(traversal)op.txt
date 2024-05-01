@@ -1,0 +1,127 @@
+#include <iostream>
+
+using namespace std;
+
+
+
+class node 
+{
+    int data;
+    node *left;
+    node * right;
+    friend class tree;
+    
+
+public:
+node(int val)
+{
+
+    data = val;
+    left = NULL;
+    right = NULL;
+
+}
+};
+
+class tree
+{
+    node * root;
+    public:
+    tree()
+    {root = NULL;
+    }
+    node * create();
+    void inorder(node *);
+    void postorder(node *);
+    void preorder(node *);
+    };
+    node*tree :: create()
+    {
+        int val;
+        cout<<"entry value";
+        cin>>val;
+        if(val ==-1)
+             return NULL;
+        node*p=new node(val);
+        if(root == NULL)
+          root=p;
+          cout<<"enter the left child node for"<<val;
+        p -> left = create();
+        cout<<"enter the right child node for"<<val;
+        p->right = create();
+        return p ;
+    }
+    void tree :: inorder(node * t)
+    {
+        if(t!= NULL)
+        {
+            inorder(t->left);
+            cout<<t->data<<" ";
+            inorder(t->right);
+        
+ 
+        }
+
+    }
+    void tree :: preorder(node * t)
+    {
+
+        if(t!= NULL)
+        {
+            cout<<t->data<<" ";
+            preorder(t->left);
+            preorder(t->right);
+        }
+
+     }
+     void tree :: postorder(node * t)
+     {
+        if(t!= NULL){
+
+            postorder(t-> left);
+            postorder(t-> right);
+            cout<<t->data<<" ";
+
+        }
+        
+     }
+
+int main()
+{node* p;
+tree t1 ;
+ p=t1.create();
+
+cout<<"inorder traveral";
+t1.inorder(p);
+cout<<"preorder transversal";
+t1.preorder(p);
+cout<<"postorder transversal";
+t1.postorder(p);
+        return 0;
+
+} 
+
+
+  
+""output"":-
+
+entry value10
+enter the left child node for 10 entry value : 5   
+enter the left child node for 5 entry value : 9    
+enter the left child node for 9 entry value : -1   
+enter the right child node for 9 entry value : -1  
+enter the right child node for 5 entry value : 8   
+enter the left child node for 8 entry value : -1   
+enter the right child node for 8 entry value: -1  
+enter the right child node for 10 entry value : 6  
+enter the left child node for 6 entry value : 12   
+enter the left child node for 12 entry value : -1  
+enter the right child node for 12 entry value : -1 
+enter the right child node for 6 entry value : 15  
+enter the left child node for 15 entry value : -1  
+enter the right child node for 15 entry value : -1 
+inorder traveral 9581012615
+preorder transversal 1059861215 
+postorder transversal 9851215610     
+  
+       

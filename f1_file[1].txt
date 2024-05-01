@@ -1,0 +1,318 @@
+#include<fstream.h>
+#include<iostream.h>
+#include<stdlib.h>
+#include<stdio.h>
+//using namespace std;
+class Student
+{
+	int roll;
+	char name[100];
+	char Div[20];
+	char addr[20];
+	public:
+	void input();
+	void show();
+	int getroll()
+	{
+		return roll;
+	}
+};
+void Student::input()
+{
+	cout<<"Enter Roll No:";
+	cin>>roll;
+	cout<<"Enter Name:";
+	cin>>name;
+	cout<<"Enter Div:";
+	cin>>Div;
+	cout<<"Enter Address:";
+	cin>>addr;
+}
+void Student::show()
+{
+	cout<<"\n"<<roll<<"\t"<<name<<"\t"<<Div<<"\t"<<addr;
+}
+
+fstream f;
+Student s;
+void create()		//Function to Create Data File
+{
+	char ch='y';
+	f.open("binary.txt",ios::out| ios::binary);
+	while(ch=='y' || ch =='Y')
+	{
+		s.input();
+		f.write((char*)&s, sizeof(s));
+		cout<<"Want to Continue.....";
+		cin>>ch;
+	}
+	f.close();
+}
+
+void add()             //Function to Add New Record in Data File
+{
+	char ch='y';
+	f.open("binary.dat",ios::app| ios::binary);
+	while(ch=='y' || ch =='Y')
+	{
+		s.input();
+		f.write((char*)&s, sizeof(s));
+		cout<<"Want to Continue.....";
+		cin>>ch;
+	}
+	f.close();
+}
+
+void display()	//Function to Display All Record from Data File
+{
+	f.open("binary.txt",ios::in| ios::binary);
+	if(!f)
+	{
+		cout<<"File not Found";
+		exit(0);
+	}
+	else
+	{
+		f.read((char*)&s, sizeof(s));
+		while(!f.eof())
+		{
+			s.show();
+			f.read((char*)&s, sizeof(s));
+		}
+	}
+	f.close();
+}
+
+//Function to Display particular Record from Data File
+
+void search()	
+{
+	int n,fl=0;
+	cout<<"Enter Roll no of student that should be searched:";
+	cin>>n;
+	f.open("binary.dat",ios::in| ios::binary);
+	if(!f)
+	{
+		cout<<"File not Found";
+		exit(0);
+	}
+	else
+	{
+		f.read((char*)&s, sizeof(s));
+		while(!f.eof())
+		{
+			if(n==s.getroll())
+			{
+				s.show();
+				fl=1;
+				break;
+			}
+			else
+				f.read((char*)&s, sizeof(s));
+		}
+		if(fl==0)
+			cout<<"\nRecord does not exist!";
+	}
+	f.close();
+}
+
+//Function to Modify Particular Record from Data File
+void modify()		
+{
+	int n,fl=0;
+	cout<<"Enter Roll no of student that should be searched:";
+	cin>>n;
+	f.open("binary.dat",ios::in| ios::out|ios::binary);
+	if(!f)
+	{
+		cout<<"File not Found";
+		exit(0);
+	}
+	else
+	{
+		f.read((char*)&s, sizeof(s));
+		while(!f.eof())
+		{
+			if(n==s.getroll())
+			{
+				f.seekg(0,ios::cur);
+				cout<<"Enter New Record.."<<endl;
+				s.input();
+				f.seekp(f.tellg() - sizeof(s));
+				f.write((char*)&s, sizeof(s));
+				fl=1;
+			}
+			else
+				f.read((char*)&s, sizeof(s));
+		}
+		if(fl==0)
+			cout<<"\nRecord does not exist!";
+	}
+	f.close();
+}
+
+//Function to Delete Particular Record from Data File
+void Delete()		
+{
+	int n,c1=0,c2=0;
+	cout<<"Enter rollno of student that should be Deleted :";
+	cin>>n;
+	ofstream newfile;
+	newfile.open("new.dat",ios::out|ios::binary);
+	f.open("binary.dat",ios::in| ios::binary);
+	if(!f)
+	{
+		cout<<"File not Found";
+		exit(0);
+	}
+	else
+	{
+		f.read((char*)&s, sizeof(s));
+
+		while(!f.eof())
+		{
+			c1++;
+			if(n!=s.getroll())
+			{
+				newfile.write((char*)&s, sizeof(s));
+				c2++;
+			}
+			f.read((char*)&s, sizeof(s));
+		}
+		if(c1==c2)
+			cout<<"\nRecord does not exist!";
+	}
+	newfile.close();
+	f.close();
+	remove("binary.dat");
+	rename("new.dat", "binary.dat");
+}
+int main()
+{
+	int opt;
+	while(1)
+		{
+		cout<<"\nMENU\n1.Create Data File \n2.Add New Record\n3.Display Record"
+			"\n4.Search\n5.Update Record\n6.Delete record\n7.Exit";
+		cout<<"\nEnter your Option : ";
+		cin>>opt;
+		switch(opt)
+		{
+			case 1:
+			{
+				create();
+				break;
+			}
+			case 2:
+			{
+				add();
+				break;
+			}
+			case 3:
+			{   cout<<"\n Student Information\n";
+				cout<<"RollNo"<<"\t"<<"Name"<<"\t"<<"Div"<<"\t"<<"Address"<<endl;
+				display();
+				break;
+			}
+			case 4:
+			{
+				search();
+				break;
+			}
+			case 5:
+			{
+				modify();
+				break;
+			}
+			case 6:
+			{
+				Delete();
+				break;
+			}
+			case 7:
+			{
+				exit(0);
+			}
+			default:
+			{
+				cout<<"Wrong Choice....Press Key For View the Main Menu";
+				getchar();
+			}
+		}
+	}
+}
+
+output :
+
+MENU
+1.Create Data File 
+2.Add New Record
+3.Display Record
+4.Search
+5.Update Record
+6.Delete record
+7.Exit
+Enter your Option : 1
+Enter Roll No:1
+Enter Name:monya
+Enter Div:c
+Enter Address:sit
+Want to Continue.....
+
+2
+
+MENU
+1.Create Data File 
+2.Add New Record
+3.Display Record
+4.Search
+5.Update Record
+6.Delete record
+7.Exit
+Enter your Option : 2
+Enter Roll No:12
+Enter Name:pinka
+Enter Div:a
+Enter Address:12
+Want to Continue.....4
+
+MENU
+1.Create Data File 
+2.Add New Record
+3.Display Record
+4.Search
+5.Update Record
+6.Delete record
+7.Exit
+Enter your Option : 3
+
+ Student Information
+RollNo  Name    Div     Address
+
+1       monya   c       sit
+MENU
+1.Create Data File 
+2.Add New Record
+3.Display Record
+4.Search
+5.Update Record
+6.Delete record
+7.Exit
+Enter your Option : 4
+Enter Roll no of student that should be searched:12
+
+12      pinka   a       12
+MENU
+1.Create Data File 
+2.Add New Record
+3.Display Record
+4.Search
+5.Update Record
+6.Delete record
+7.Exit
+Enter your Option : 7
+
+
+...Program finished with exit code 0
+Press ENTER to exit console.
+

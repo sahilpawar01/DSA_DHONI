@@ -1,0 +1,221 @@
+//Group D2_OBST
+#include<iostream>
+using namespace std;
+
+int W[10][10],C[10][10],R[10][10];
+int n ;
+int P[10],Q[10];
+char Identifier[7][20];
+
+
+void print(int i,int j)
+{
+if(i< j)
+   {
+int k = R[i][j] ;
+cout<<"\nIdentifier a"<<k<<" = "<<Identifier[k];
+cout<<"\nleft for a"<<k;
+print(i,k-1);
+cout<<"\nright for a"<<k;
+print(k,j);
+   }
+}
+
+void display_the_table()
+{
+int i,r,j;
+for(r = 0 ; r <= n; r++)
+   {
+cout<<"\n\t";
+for(i = 0 , j = r; j <=n; i++,j++)
+      {
+	cout<<"W("<<i<<","<<j<<") = "<<W[i][j]<<"   ";
+      }
+cout<<"\n\t";
+for(i = 0 , j = r; j <=n; i++,j++)
+      {
+	cout<<"C("<<i<<","<<j<<") = "<<C[i][j]<<"   ";
+      }
+cout<<"\n\t";
+for(i = 0 , j = r; j <=n; i++,j++)
+      {
+	cout<<"R("<<i<<","<<j<<") = "<<R[i][j]<<"   ";
+      }
+cout<<"\n";
+   }
+}
+
+void input_for_OBST()
+{
+int i;
+cout<<"\nEnter the no. of identifiers : ";
+cin>>n;
+for(i=1;i<=n;i++)
+   {
+cout<<"Enter the Identifier a"<<i<<" : ";
+cin>>Identifier[i];
+   }
+cout<<"\nInput the Probabilities of successfull search : \n";
+for(i=1;i<=n;i++)
+   {
+cout<<"Enter the value of p"<<i<<" : ";
+cin>>P[i];
+   }
+cout<<"\nInput the Probabilities of unsuccessfull search : \n";
+for(i=0;i<=n;i++)
+   {
+cout<<"Enter the value of q"<<i<<" : ";
+cin>>Q[i];
+   }
+}
+
+void find_OBST_dynamic_approach()
+{
+int i,j,min,index,k,r;
+   // Initialization
+for(i=0;i<=n;i++)
+   {
+      W[i][i] = Q[i];  C[i][i] = R[i][i] = 0;
+   }
+for(r = 1; r<=n; r++)
+   {
+for(i=0, j = r; j<=n; i++,j++)
+      {
+	W[i][j] = P[j] + Q[j] + W[i][j-1];
+	min = 32000;
+	for(k = i+1; k <=j; k++)
+	{
+	if( (C[i][k-1] + C[k][j]) < min)
+	  {
+	min = C[i][k-1] + C[k][j];
+	index = k;
+	  }
+	}
+	C[i][j] = min + W[i][j];
+	R[i][j] = index;
+      }
+   }
+}
+
+int main()
+{
+int ch;
+do
+   {
+
+cout<<"\n\t1 : Take the Input for OBST";
+cout<<"\n\t2 : Find the OBST using Dynamic Programming";
+cout<<"\n\t3 : Display the Table and Tree";
+cout<<"\n\t4 : Exit";
+cout<<"\n\nEnter ur choice : ";
+cin>>ch;
+switch(ch)
+      {
+	case 1 : input_for_OBST();
+		break;
+	case 2 : find_OBST_dynamic_approach();
+		break;
+	case 3 : display_the_table();
+		cout<<"\nMinimium cost of the OBST : "<<C[0][n];
+		cout<<"\nRoot of the OBST is Identifier a"<<R[0][n]<<" = "<<Identifier[R[0][n]];
+		print(0,n);
+		break;
+	case 4 : cout<<"\nEnd of Program";
+		break;
+	default :cout<<"\nTry again";
+      }
+}while(ch!=4);
+return 0;
+}
+
+output :
+
+ 1 : Take the Input for OBST
+        2 : Find the OBST using Dynamic Programming
+        3 : Display the Table and Tree
+        4 : Exit
+
+Enter ur choice : 1
+
+Enter the no. of identifiers : 5
+Enter the Identifier a1 : 1
+Enter the Identifier a2 : 4
+Enter the Identifier a3 : 9
+Enter the Identifier a4 : 7
+Enter the Identifier a5 : 8
+
+Input the Probabilities of successfull search : 
+Enter the value of p1 : 3
+Enter the value of p2 : 5
+Enter the value of p3 : 6
+Enter the value of p4 : 4
+Enter the value of p5 : 2
+
+Input the Probabilities of unsuccessfull search : 
+Enter the value of q0 : 7
+Enter the value of q1 : 6
+Enter the value of q2 : 2
+Enter the value of q3 : 5
+Enter the value of q4 : 3
+Enter the value of q5 : 2
+
+        1 : Take the Input for OBST
+        2 : Find the OBST using Dynamic Programming
+        3 : Display the Table and Tree
+        4 : Exit
+
+Enter ur choice : 2
+
+        1 : Take the Input for OBST
+        2 : Find the OBST using Dynamic Programming
+        3 : Display the Table and Tree
+        4 : Exit
+
+Enter ur choice : 3
+
+        W(0,0) = 7   W(1,1) = 6   W(2,2) = 2   W(3,3) = 5   W(4,4) = 3   W(5,5) = 2   
+        C(0,0) = 0   C(1,1) = 0   C(2,2) = 0   C(3,3) = 0   C(4,4) = 0   C(5,5) = 0   
+        R(0,0) = 0   R(1,1) = 0   R(2,2) = 0   R(3,3) = 0   R(4,4) = 0   R(5,5) = 0   
+
+        W(0,1) = 16   W(1,2) = 13   W(2,3) = 13   W(3,4) = 12   W(4,5) = 7   
+        C(0,1) = 16   C(1,2) = 13   C(2,3) = 13   C(3,4) = 12   C(4,5) = 7   
+        R(0,1) = 1   R(1,2) = 2   R(2,3) = 3   R(3,4) = 4   R(4,5) = 5   
+
+        W(0,2) = 23   W(1,3) = 24   W(2,4) = 20   W(3,5) = 16   
+        C(0,2) = 36   C(1,3) = 37   C(2,4) = 32   C(3,5) = 23   
+        R(0,2) = 1   R(1,3) = 2   R(2,4) = 3   R(3,5) = 4   
+
+        W(0,3) = 34   W(1,4) = 31   W(2,5) = 24   
+        C(0,3) = 63   C(1,4) = 56   C(2,5) = 44   
+        R(0,3) = 2   R(1,4) = 3   R(2,5) = 4   
+
+        W(0,4) = 41   W(1,5) = 35   
+        C(0,4) = 89   C(1,5) = 71   
+        R(0,4) = 2   R(1,5) = 3   
+
+        W(0,5) = 45   
+        C(0,5) = 104   
+        R(0,5) = 3   
+
+Minimium cost of the OBST : 104
+Root of the OBST is Identifier a3 = 9
+Identifier a3 = 9
+left for a3
+Identifier a1 = 1
+left for a1
+right for a1
+Identifier a2 = 4
+left for a2
+right for a2
+right for a3
+Identifier a4 = 7
+left for a4
+right for a4
+Identifier a5 = 8
+left for a5
+right for a5
+        1 : Take the Input for OBST
+        2 : Find the OBST using Dynamic Programming
+        3 : Display the Table and Tree
+        4 : Exit
+
